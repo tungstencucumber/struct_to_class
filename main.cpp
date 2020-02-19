@@ -116,11 +116,11 @@ public:
 		return false;
 	}
 
-	Vessel* detach_from_fleet(Vessel* ship) {
-		if (ship->id < this->id)
-			this->left->detach_from_fleet(ship);
-		else if (ship->id > this->id)
-			this->right->detach_from_fleet(ship);
+	Vessel* detach_from_fleet(int target_id) {
+		if (target_id < this->id)
+			this->left->detach_from_fleet(target_id);
+		else if (target_id > this->id)
+			this->right->detach_from_fleet(target_id);
 		else {
 			if (this->left == NULL) {
 				if (this->parent != NULL) {
@@ -130,10 +130,10 @@ public:
 				}
 				delete this;
 			} else {
-				vessel *replaced = this->left;
+				Vessel* replaced = this->left;
 				while (replaced->right != NULL)
 					replaced = replaced->right;
-				vessel* t = replaced->parent;
+				Vessel* t = replaced->parent;
 				this->id = replaced->id;
 				replaced->parent->right = NULL;
 				delete replaced;
@@ -172,14 +172,14 @@ public:
 	bool find_vessel(int i) {
 		return this->root->find_vessel(i);
 	}
-	void detach_from_fleet(Vessel* ship) {
-		if (this->find_vessel(ship) == true)
-			this->root = root->detach_from_fleet(ship);
+	void detach_from_fleet(int target_id) {
+		if (this->find_vessel(target_id) == true)
+			this->root = root->detach_from_fleet(target_id);
 	}
 
 
 	void create(int value) {
-		Vessel t(value) = new Vessel;
+		Vessel* t = new Vessel(value);
 		this->attach_to_fleet(t);
 	}
 
