@@ -1,19 +1,19 @@
 #include <iostream>
 using namespace std;
 
-class Vehicle
+class Container
 {
 public:
     // Виртуальные методы, должны быть реализованы вашим контейнером
-    virtual void create(int id) = 0;
-    virtual bool exists(int id) = 0;
-    virtual void remove(int id) = 0;
+    virtual void insert(int value) = 0;
+    virtual bool exists(int value) = 0;
+    virtual void remove(int value) = 0;
 
     // И этот тоже, хотя к нему потом ещё вернёмся
-    virtual void report() = 0;
+    virtual void print() = 0;
     
     // Виртуальный деструктор (пока просто поверьте, что он нужен)
-    virtual ~Vehicle() { };
+    virtual ~Container() { };
 };
 
 class Vessel
@@ -150,22 +150,26 @@ public:
 	void report() {
 		while(this->left != NULL)
 			this->left->report();
-		this->getID();
+		cout << this->getID();
 		while(this->right != NULL)
 			this->right->report();
 	}
 };
 
-class Fleet: public Vehicle
+class Fleet: public Container
 {
 private:
 	Vessel* root;
 public:
-	Fleet(Vessel* r) {
-		this->root = r;
+	Fleet() {
+		this->root = NULL;
 	}
 	//~fleet();
 	void attach_to_fleet(Vessel* ship) {
+		if (root == NULL) {
+			root = ship;
+			return;
+		}
 		this->root = root->attach_to_fleet(ship);
 	}
 
@@ -178,7 +182,7 @@ public:
 	}
 
 
-	void create(int value) {
+	void insert(int value) {
 		Vessel* t = new Vessel(value);
 		this->attach_to_fleet(t);
 	}
@@ -191,13 +195,32 @@ public:
     	this->root->detach_from_fleet(value);
     }
 
-    void report() {
+    void print() {
     	this->root->report();
     }
 };
 
 
-int main() {
+int main()
+{
+    Container* c = new Fleet();
 
-	return 0;
+    for(int i = 1; i < 10; i++)
+        c->insert(i*i);
+
+    // cout << "Container after creation:" << endl;
+    // c->print();
+
+    // if(c->exists(25))
+    //     cout << "Search for value 25: found" << endl;
+
+    // if(!c->exists(111))
+    //     cout << "Search for value 111: not found" << endl;
+
+    // c->remove(25);
+    // cout << "Container after deletion of the element:" << endl;
+    // c->print();
+
+    delete c;
+    return 0;
 }
