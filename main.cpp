@@ -47,7 +47,7 @@ public:
 				ship->parent = this;
 				return this;
 			}
-			this->left->attach_to_fleet(ship);
+			else this->left->attach_to_fleet(ship);
 		}
 		else
 		{
@@ -56,55 +56,56 @@ public:
 				ship->parent = this;
 				return this;
 			}
-			this->right->attach_to_fleet(ship);
+			else this->right->attach_to_fleet(ship);
 		}
 		// this->skew();
 		// this->split();
-	}
-
-	Vessel* skew() {
-		if (this->left != NULL)
-			if (this->level == this->left->level) {
-				Vessel* k = this->left;
-				if (this->parent != NULL)
-				{
-					k->parent = this->parent;
-					if (this == k->parent->right)
-						k->parent->right == k;
-					else k->parent->left == k;
-				}
-				this->parent = k;
-				this->left = k->right;
-				if (this->left != NULL)
-					this->left->parent = this;
-				k->right = this;
-				return k;
-			}
 		return this;
 	}
 
-	Vessel* split() {
-		if(this->right != NULL)
-			if(this->right->right != NULL)
-				if(this->right->right->level == this->level)
-				{
-					Vessel* r = this->right;
-					if (this->parent != NULL) {
-						r->parent = this->parent;
-						this->parent = r;
-						if (this == r->parent->left)
-							r->parent->left = r;
-						else r->parent->right = r;
-					}
-					this->right = r->left;
-					if (this->right != NULL)
-						this->right->parent = this;
-					r->left = this;
-					r->level++;
-					return r;
-				}
-		return this;
-	}
+	// Vessel* skew() {
+	// 	if (this->left != NULL)
+	// 		if (this->level == this->left->level) {
+	// 			Vessel* k = this->left;
+	// 			if (this->parent != NULL)
+	// 			{
+	// 				k->parent = this->parent;
+	// 				if (this == k->parent->right)
+	// 					k->parent->right == k;
+	// 				else k->parent->left == k;
+	// 			}
+	// 			this->parent = k;
+	// 			this->left = k->right;
+	// 			if (this->left != NULL)
+	// 				this->left->parent = this;
+	// 			k->right = this;
+	// 			return k;
+	// 		}
+	// 	return this;
+	// }
+
+	// Vessel* split() {
+	// 	if(this->right != NULL)
+	// 		if(this->right->right != NULL)
+	// 			if(this->right->right->level == this->level)
+	// 			{
+	// 				Vessel* r = this->right;
+	// 				if (this->parent != NULL) {
+	// 					r->parent = this->parent;
+	// 					this->parent = r;
+	// 					if (this == r->parent->left)
+	// 						r->parent->left = r;
+	// 					else r->parent->right = r;
+	// 				}
+	// 				this->right = r->left;
+	// 				if (this->right != NULL)
+	// 					this->right->parent = this;
+	// 				r->left = this;
+	// 				r->level++;
+	// 				return r;
+	// 			}
+	// 	return this;
+	// }
 
 	bool find_vessel(int i) {
 		if (this->id == i)
@@ -133,7 +134,6 @@ public:
 				Vessel* replaced = this->left;
 				while (replaced->right != NULL)
 					replaced = replaced->right;
-				Vessel* t = replaced->parent;
 				this->id = replaced->id;
 				replaced->parent->right = NULL;
 				delete replaced;
@@ -148,10 +148,10 @@ public:
 	}
 
 	void report() {
-		while(this->left != NULL)
+		if (this->left != NULL)
 			this->left->report();
-		cout << this->getID();
-		while(this->right != NULL)
+		cout << this->getID() << endl;
+		if(this->right != NULL)
 			this->right->report();
 	}
 };
@@ -208,18 +208,18 @@ int main()
     for(int i = 1; i < 10; i++)
         c->insert(i*i);
 
-    // cout << "Container after creation:" << endl;
-    // c->print();
+    cout << "Container after creation:" << endl;
+    c->print();
 
-    // if(c->exists(25))
-    //     cout << "Search for value 25: found" << endl;
+    if(c->exists(25))
+        cout << "Search for value 25: found" << endl;
 
-    // if(!c->exists(111))
-    //     cout << "Search for value 111: not found" << endl;
+    if(!c->exists(111))
+        cout << "Search for value 111: not found" << endl;
 
-    // c->remove(25);
-    // cout << "Container after deletion of the element:" << endl;
-    // c->print();
+    c->remove(25);
+    cout << "Container after deletion of the element:" << endl;
+    c->print();
 
     delete c;
     return 0;
