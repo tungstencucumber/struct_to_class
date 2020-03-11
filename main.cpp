@@ -71,8 +71,8 @@ public:
 	// 			{
 	// 				k->parent = this->parent;
 	// 				if (this == k->parent->right)
-	// 					k->parent->right == k;
-	// 				else k->parent->left == k;
+	// 					k->parent->right = k;
+	// 				else k->parent->left = k;
 	// 			}
 	// 			this->parent = k;
 	// 			this->left = k->right;
@@ -154,17 +154,21 @@ public:
 		if(this->right != NULL)
 			this->right->report();
 	}
+
+	void dismiss_fleet() {
+		while (this->left != NULL)
+			this->left->detach_from_fleet(this->left->id);
+		while (this->right != NULL)
+			this->right->detach_from_fleet(this->right->id);
+	}
 };
 
 class Fleet: public Container
 {
 private:
 	Vessel* root;
-public:
-	Fleet() {
-		this->root = NULL;
-	}
-	//~fleet();
+protected:
+
 	void attach_to_fleet(Vessel* ship) {
 		if (root == NULL) {
 			root = ship;
@@ -176,11 +180,24 @@ public:
 	bool find_vessel(int i) {
 		return this->root->find_vessel(i);
 	}
+
 	void detach_from_fleet(int target_id) {
 		if (this->find_vessel(target_id) == true)
 			this->root = root->detach_from_fleet(target_id);
 	}
 
+	void dismiss_fleet() {
+		root->dismiss_fleet();
+		delete root;
+	}
+
+public:
+	Fleet() {
+		this->root = NULL;
+	}
+	~Fleet() {
+		dismiss_fleet();
+	}
 
 	void insert(int value) {
 		Vessel* t = new Vessel(value);
