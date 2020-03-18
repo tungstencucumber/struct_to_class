@@ -111,9 +111,9 @@ public:
 		if (this->id == i)
 			return true;
 		else if (this->id > i && this->left != NULL)
-			this->left->find_vessel(i);
+			return this->left->find_vessel(i);
 		else if (this->id < i && this->right != NULL)
-			this->right->find_vessel(i);
+			return this->right->find_vessel(i);
 		return false;
 	}
 
