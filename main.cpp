@@ -110,9 +110,9 @@ public:
 	bool find_vessel(int i) {
 		if (this->id == i)
 			return true;
-		if (this->id > i && this->left != NULL)
+		else if (this->id > i && this->left != NULL)
 			this->left->find_vessel(i);
-		if (this->id < i && this->right != NULL)
+		else if (this->id < i && this->right != NULL)
 			this->right->find_vessel(i);
 		return false;
 	}
@@ -225,18 +225,9 @@ int main()
     for(int i = 1; i < 10; i++)
         c->insert(i*i);
 
-    cout << "Container after creation:" << endl;
-    c->print();
-
-    if(c->exists(25))
-        cout << "Search for value 25: found" << endl;
-
-    if(!c->exists(111))
-        cout << "Search for value 111: not found" << endl;
-
-    c->remove(25);
-    cout << "Container after deletion of the element:" << endl;
-    c->print();
+    cout << boolalpha;
+    cout << "Value 25 found: " << c->exists(25) << endl;
+    cout << "Value 111 found: " << c->exists(111) << endl;
 
     delete c;
     return 0;
